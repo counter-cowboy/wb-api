@@ -9,6 +9,10 @@ DBName: larabase<br>
 Username: root<br>
 Password: root<br>
 
+### ! Перед началом работы выполнить миграции !
+Зайти в папку ./src<br>
+в консоли запустить процесс миграции<br>
+php artisan migrate<br>
 #### Порядок создания аккаунта
 php artisan create:tokentype {name}<br>
 php artisan create:apiservice {service_name} {tokentype_name}<br>
