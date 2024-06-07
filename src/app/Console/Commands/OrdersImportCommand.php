@@ -6,6 +6,7 @@ use App\Models\Account;
 use App\Models\Order;
 use App\Models\Token;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class OrdersImportCommand extends Command
@@ -22,7 +23,6 @@ class OrdersImportCommand extends Command
         $tokentypeId = Account::where('name', $accountName)->first()->tokentype_id;
 
         $token = Token::where('tokentype_id', $tokentypeId)->first()->token;
-
 
         $this->list($today, $token, $accountId);
 
@@ -47,16 +47,28 @@ class OrdersImportCommand extends Command
                 'limit' => $limit
             ]);
         $result[] = json_decode($response->getBody()->getContents(), true);
+        $status=$response->status();
 
+        if($status==429)
+            $this->info('Error 429. Try again later.');
 
-        foreach ($result as $datum)
-            foreach ($datum['data'] as $arrData) {
-                $arrData['account_id'] = $accountId;
-//                dd($arrData);
-                Order::firstOrCreate($arrData);
-            }
+        try {
+            DB::beginTransaction();
 
-        $this->info('Database Orders uploaded');
+                foreach ($result as $datum)
+                    foreach ($datum['data'] as $arrData)
+                    {
+                        $arrData['account_id'] = $accountId;
+                        Order::firstOrCreate($arrData);
+                    }
 
+                $this->info('Database Orders uploaded');
+            DB::commit();
+        }
+        catch (\Exception $exception)
+        {
+            $this->info('Something gone wrong, retry later');
+            return $exception->getMessage();
+        }
     }
 }

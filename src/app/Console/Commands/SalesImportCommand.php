@@ -6,6 +6,7 @@ use App\Models\Account;
 use App\Models\Sale;
 use App\Models\Token;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class SalesImportCommand extends Command
@@ -50,15 +51,28 @@ class SalesImportCommand extends Command
             ]);
         $result[] = json_decode($response->getBody()->getContents(), true);
 
+        $status=$response->status();
 
-        foreach ($result as $datum)
-            foreach ($datum['data'] as $arrData)
-            {
-                $arrData['account_id'] = $accountId;
-                Sale::firstOrCreate($arrData);
-            }
+        if ($status==429)
+            $this->info('Error 429. Try again later.');
 
-        $this->info('Database Sales uploaded');
+        try
+        {
+            DB::beginTransaction();
+                foreach ($result as $datum)
+                    foreach ($datum['data'] as $arrData)
+                    {
+                        $arrData['account_id'] = $accountId;
+                        Sale::firstOrCreate($arrData);
+                    }
 
+                $this->info('Database Sales uploaded');
+            DB::commit();
+        }
+        catch (\Exception $exception)
+        {
+            $this->info('Something gone wrong, retry later');
+            return $exception->getMessage();
+        }
     }
 }
