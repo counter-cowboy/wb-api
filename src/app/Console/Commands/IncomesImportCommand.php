@@ -48,6 +48,7 @@ class IncomesImportCommand extends Command
                 'page' => $page,
                 'limit' => $limit
             ]);
+
         $status=$response->status();
 
         if ($status==429)
