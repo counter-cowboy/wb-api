@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3.5'
 
 services:
     php:
@@ -11,7 +11,7 @@ services:
     nginx:
        image: nginx:latest
        ports:
-           - 80:80
+           - 8001:80
        volumes:
            - './src:/var/www/html'
            - './docker/nginx/conf.d:/etc/nginx/conf.d'
