@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Token extends Model
 {
-    protected $guarded=false;
 
     public function Tokentype()
     {
