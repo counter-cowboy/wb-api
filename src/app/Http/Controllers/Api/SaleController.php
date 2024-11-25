@@ -14,7 +14,7 @@ class SaleController extends Controller
     public function list(SaleRequest $request): SalesCollection
     {
         ini_set('max_execution_time', 240);
-        $key = 'E6kUTYrYwZq2tN4QEtyzsbEBk3ie';
+        $key = 'key';
 
         $data = $request->validated();
         $dateFrom = $data['dateFrom'];
@@ -22,7 +22,7 @@ class SaleController extends Controller
         $page = $data['page'];
         $limit = $data['limit'];
 
-        $response = Http::get("89.108.115.241:6969/api/sales",
+        $response = Http::get("0.0.0.0:6969/api/sales",
             [
                 'dateFrom' => $dateFrom,
                 'dateTo' => $dateTo,
