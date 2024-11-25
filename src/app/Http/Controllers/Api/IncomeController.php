@@ -15,7 +15,7 @@ class IncomeController extends Controller
     public function list(IncomeRequest $request): IncomesCollection
     {
         ini_set('max_execution_time', 240);
-        $key = 'E6kUTYrYwZq2tN4QEtyzsbEBk3ie';
+        $key = 'key';
 
         $data = $request->validated();
         $dateFrom = $data['dateFrom'];
@@ -23,7 +23,7 @@ class IncomeController extends Controller
         $page = $data['page'];
         $limit = $data['limit'];
 
-        $response = Http::get("89.108.115.241:6969/api/incomes",
+        $response = Http::get("0.0.0.0:6969/api/incomes",
             [
                 'dateFrom' => $dateFrom,
                 'dateTo' => $dateTo,
