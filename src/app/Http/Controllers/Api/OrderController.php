@@ -14,7 +14,7 @@ class OrderController extends Controller
     public function list(OrderRequest $request) : OrdersCollection
     {
         ini_set('max_execution_time', 240);
-        $key = 'E6kUTYrYwZq2tN4QEtyzsbEBk3ie';
+        $key = 'key';
 
         $data = $request->validated();
         $dateFrom = $data['dateFrom'];
@@ -22,7 +22,7 @@ class OrderController extends Controller
         $page = $data['page'];
         $limit = $data['limit'];
 
-        $response = Http::get("89.108.115.241:6969/api/orders",
+        $response = Http::get("0.0.0.0:6969/api/orders",
             [
                 'dateFrom' => $dateFrom,
                 'dateTo' => $dateTo,
@@ -32,7 +32,6 @@ class OrderController extends Controller
             ]);
 
         $result[] = json_decode($response->getBody()->getContents(), true);
-//        dd($result);
 
         foreach ($result as $datum)
             foreach ($datum['data'] as $arrData)
@@ -40,7 +39,6 @@ class OrderController extends Controller
                 $arrData[]=['account_id'=>1];
                 Order::firstOrCreate($arrData);
             }
-
 
         return new OrdersCollection(OrderFilter::searchByRequest($request)
             ->paginate($limit ?? 500)
