@@ -15,14 +15,14 @@ class StockController extends Controller
     public function list(StockRequest $request): StocksCollection
     {
         ini_set('max_execution_time', 240);
-        $key = 'E6kUTYrYwZq2tN4QEtyzsbEBk3ie';
+        $key = 'key';
 
         $data = $request->validated();
         $dateFrom = $data['dateFrom'];
         $page = $data['page'];
         $limit = $data['limit'];
 
-        $response = Http::get("89.108.115.241:6969/api/stocks",
+        $response = Http::get("0.0.0.0:6969/api/stocks",
             [
                 'dateFrom' => $dateFrom, // !!only today-date !!
                 'page' => $page,
@@ -30,7 +30,7 @@ class StockController extends Controller
                 'limit' => $limit
             ]);
         $result[] = json_decode($response->getBody()->getContents(), true);
-//        dd($result);
+
         foreach ($result as $datum)
             foreach ($datum['data'] as $arrData)
             {
